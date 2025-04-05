@@ -18,7 +18,8 @@ class StatisticsPage extends StatefulWidget {
   State<StatisticsPage> createState() => _StatisticsPageState();
 }
 
-class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProviderStateMixin {
+class _StatisticsPageState extends State<StatisticsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String _selectedPeriod = 'Bu Ay';
   final List<String> _timePeriods = ['Bu Ay', 'Bu Yıl', 'Tüm Zamanlar'];
@@ -35,15 +36,18 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     super.dispose();
   }
 
-  // Seçilen dönem için filtrelenmiş işlemler
+  // Seçilen dönem için filtrelenmiş işlemler ugur
   List<Transaction> get filteredTransactions {
     final now = DateTime.now();
     switch (_selectedPeriod) {
       case 'Bu Ay':
-        return widget.transactions.where((t) => 
-          t.date.month == now.month && t.date.year == now.year).toList();
+        return widget.transactions
+            .where((t) => t.date.month == now.month && t.date.year == now.year)
+            .toList();
       case 'Bu Yıl':
-        return widget.transactions.where((t) => t.date.year == now.year).toList();
+        return widget.transactions
+            .where((t) => t.date.year == now.year)
+            .toList();
       case 'Tüm Zamanlar':
       default:
         return widget.transactions;
@@ -99,7 +103,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     final Map<String, double> weeklyData = {};
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    
+
     for (int i = 0; i < 7; i++) {
       final date = startOfWeek.add(Duration(days: i));
       final dayName = DateFormat('E', 'tr_TR').format(date);
@@ -115,7 +119,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
         }
       }
     }
-    
+
     return weeklyData;
   }
 
@@ -157,7 +161,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     // Kategorileri büyükten küçüğe sırala
     final sortedExpenseCategories = expensesByCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-      
+
     final sortedIncomeCategories = incomeByCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -171,7 +175,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
       'Sağlık': Colors.teal,
       'Diğer': Colors.brown,
     };
-    
+
     final incomeCategoryColors = {
       'Maaş': Colors.green,
       'Serbest Meslek': Colors.teal,
@@ -182,8 +186,15 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     };
 
     final defaultColors = [
-      Colors.red, Colors.blue, Colors.green, Colors.purple,
-      Colors.orange, Colors.teal, Colors.pink, Colors.amber, Colors.indigo,
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.purple,
+      Colors.orange,
+      Colors.teal,
+      Colors.pink,
+      Colors.amber,
+      Colors.indigo,
     ];
 
     // Pasta grafik hazırlama - Giderler
@@ -192,16 +203,21 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
       for (var i = 0; i < sortedExpenseCategories.length; i++) {
         final category = sortedExpenseCategories[i];
         final percentage = category.value / totalExpenses;
-        final color = expenseCategoryColors[category.key] ?? defaultColors[i % defaultColors.length];
+        final color = expenseCategoryColors[category.key] ??
+            defaultColors[i % defaultColors.length];
 
         expensePieChartSections.add(
           PieChartSectionData(
             color: color,
             value: category.value,
-            title: percentage > 0.05 ? '${(percentage * 100).toStringAsFixed(0)}%' : '',
+            title: percentage > 0.05
+                ? '${(percentage * 100).toStringAsFixed(0)}%'
+                : '',
             radius: 100,
             titleStyle: const TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         );
@@ -216,23 +232,28 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
         ),
       );
     }
-    
+
     // Pasta grafik - Gelirler
     final incomePieChartSections = <PieChartSectionData>[];
     if (totalIncome > 0) {
       for (var i = 0; i < sortedIncomeCategories.length; i++) {
         final category = sortedIncomeCategories[i];
         final percentage = category.value / totalIncome;
-        final color = incomeCategoryColors[category.key] ?? defaultColors[i % defaultColors.length];
+        final color = incomeCategoryColors[category.key] ??
+            defaultColors[i % defaultColors.length];
 
         incomePieChartSections.add(
           PieChartSectionData(
             color: color,
             value: category.value,
-            title: percentage > 0.05 ? '${(percentage * 100).toStringAsFixed(0)}%' : '',
+            title: percentage > 0.05
+                ? '${(percentage * 100).toStringAsFixed(0)}%'
+                : '',
             radius: 100,
             titleStyle: const TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         );
@@ -251,21 +272,23 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     // Haftalık harcama verileri
     final weeklyData = getWeeklyData();
     final weeklySpots = weeklyData.entries
-        .map((e) => FlSpot(weeklyData.keys.toList().indexOf(e.key).toDouble(), e.value))
+        .map((e) =>
+            FlSpot(weeklyData.keys.toList().indexOf(e.key).toDouble(), e.value))
         .toList();
 
-    final maxWeeklyValue = weeklyData.values.isEmpty 
-        ? 1000.0 
+    final maxWeeklyValue = weeklyData.values.isEmpty
+        ? 1000.0
         : weeklyData.values.reduce((a, b) => a > b ? a : b) * 1.2;
 
     // Aylık harcama verileri
     final monthlyData = monthlyExpenses;
     final monthlySpots = monthlyData.entries
-        .map((e) => FlSpot(monthlyData.keys.toList().indexOf(e.key).toDouble(), e.value))
+        .map((e) => FlSpot(
+            monthlyData.keys.toList().indexOf(e.key).toDouble(), e.value))
         .toList();
 
-    final maxMonthlyValue = monthlyData.values.isEmpty 
-        ? 1000.0 
+    final maxMonthlyValue = monthlyData.values.isEmpty
+        ? 1000.0
         : monthlyData.values.reduce((a, b) => a > b ? a : b) * 1.2;
 
     return Scaffold(
@@ -306,28 +329,21 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
         children: [
           // HARCAMALAR SAYFASI
           _buildExpensesTab(
-            context, 
-            formatter, 
-            sortedExpenseCategories, 
-            expensePieChartSections, 
-            expenseCategoryColors, 
-            defaultColors, 
-            weeklyData, 
-            weeklySpots, 
-            maxWeeklyValue,
-            monthlyData,
-            maxMonthlyValue
-          ),
-          
+              context,
+              formatter,
+              sortedExpenseCategories,
+              expensePieChartSections,
+              expenseCategoryColors,
+              defaultColors,
+              weeklyData,
+              weeklySpots,
+              maxWeeklyValue,
+              monthlyData,
+              maxMonthlyValue),
+
           // GELİRLER SAYFASI
-          _buildIncomesTab(
-            context, 
-            formatter, 
-            sortedIncomeCategories, 
-            incomePieChartSections, 
-            incomeCategoryColors, 
-            defaultColors
-          ),
+          _buildIncomesTab(context, formatter, sortedIncomeCategories,
+              incomePieChartSections, incomeCategoryColors, defaultColors),
         ],
       ),
     );
@@ -335,18 +351,17 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
 
   // Harcamalar tab sayfası
   Widget _buildExpensesTab(
-    BuildContext context, 
-    NumberFormat formatter, 
-    List<MapEntry<String, double>> sortedExpenseCategories,
-    List<PieChartSectionData> expensePieChartSections,
-    Map<String, Color> expenseCategoryColors,
-    List<Color> defaultColors,
-    Map<String, double> weeklyData,
-    List<FlSpot> weeklySpots,
-    double maxWeeklyValue,
-    Map<String, double> monthlyData,
-    double maxMonthlyValue
-  ) {
+      BuildContext context,
+      NumberFormat formatter,
+      List<MapEntry<String, double>> sortedExpenseCategories,
+      List<PieChartSectionData> expensePieChartSections,
+      Map<String, Color> expenseCategoryColors,
+      List<Color> defaultColors,
+      Map<String, double> weeklyData,
+      List<FlSpot> weeklySpots,
+      double maxWeeklyValue,
+      Map<String, double> monthlyData,
+      double maxMonthlyValue) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -381,22 +396,13 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
 
           // Haftalık Trend Kartı
           _buildWeeklyTrendCard(
-            context,
-            weeklyData,
-            weeklySpots,
-            maxWeeklyValue,
-            formatter
-          ),
+              context, weeklyData, weeklySpots, maxWeeklyValue, formatter),
 
           const SizedBox(height: 24),
 
           // Aylık Trend Kartı
           _buildMonthlyTrendCard(
-            context,
-            monthlyData,
-            maxMonthlyValue,
-            formatter
-          ),
+              context, monthlyData, maxMonthlyValue, formatter),
         ],
       ),
     );
@@ -404,13 +410,12 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
 
   // Gelirler tab sayfası
   Widget _buildIncomesTab(
-    BuildContext context, 
-    NumberFormat formatter, 
-    List<MapEntry<String, double>> sortedIncomeCategories,
-    List<PieChartSectionData> incomePieChartSections,
-    Map<String, Color> incomeCategoryColors,
-    List<Color> defaultColors
-  ) {
+      BuildContext context,
+      NumberFormat formatter,
+      List<MapEntry<String, double>> sortedIncomeCategories,
+      List<PieChartSectionData> incomePieChartSections,
+      Map<String, Color> incomeCategoryColors,
+      List<Color> defaultColors) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -454,7 +459,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
       ),
     );
   }
-  
+
   // Toplam Özet Kartı
   Widget _buildSummaryCard(
     BuildContext context, {
@@ -566,9 +571,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                       ...sortedCategories.map((category) {
                         final percentage = category.value / total;
                         final color = categoryColors[category.key] ??
-                            defaultColors[
-                                sortedCategories.indexOf(category) %
-                                    defaultColors.length];
+                            defaultColors[sortedCategories.indexOf(category) %
+                                defaultColors.length];
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -615,12 +619,11 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
 
   // Haftalık Trend Kartı
   Widget _buildWeeklyTrendCard(
-    BuildContext context,
-    Map<String, double> weeklyData,
-    List<FlSpot> weeklySpots,
-    double maxWeeklyValue,
-    NumberFormat formatter
-  ) {
+      BuildContext context,
+      Map<String, double> weeklyData,
+      List<FlSpot> weeklySpots,
+      double maxWeeklyValue,
+      NumberFormat formatter) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -641,7 +644,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                 if (weeklyData.values.any((value) => value > 0))
                   TextButton(
                     onPressed: () {
-                      widget.onPremiumFeatureRequested?.call('Detaylı Haftalık Rapor');
+                      widget.onPremiumFeatureRequested
+                          ?.call('Detaylı Haftalık Rapor');
                     },
                     child: const Text('Detaylı Rapor'),
                   ),
@@ -677,7 +681,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                if (value.toInt() >= 0 && value.toInt() < weeklyData.length) {
+                                if (value.toInt() >= 0 &&
+                                    value.toInt() < weeklyData.length) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
@@ -720,11 +725,10 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
 
   // Aylık Trend Kartı
   Widget _buildMonthlyTrendCard(
-    BuildContext context,
-    Map<String, double> monthlyData,
-    double maxMonthlyValue,
-    NumberFormat formatter
-  ) {
+      BuildContext context,
+      Map<String, double> monthlyData,
+      double maxMonthlyValue,
+      NumberFormat formatter) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -745,7 +749,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                 if (monthlyData.values.any((value) => value > 0))
                   TextButton(
                     onPressed: () {
-                      widget.onPremiumFeatureRequested?.call('Detaylı Aylık Rapor');
+                      widget.onPremiumFeatureRequested
+                          ?.call('Detaylı Aylık Rapor');
                     },
                     child: const Text('Detaylı Rapor'),
                   ),
@@ -771,7 +776,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                         barTouchData: BarTouchData(
                           enabled: true,
                           touchTooltipData: BarTouchTooltipData(
-                            tooltipBgColor: Colors.blueGrey,
+                            // tooltipBgColor satırını kaldırdık
                             getTooltipItem: (group, groupIndex, rod, rodIndex) {
                               return BarTooltipItem(
                                 formatter.format(rod.toY),
@@ -798,7 +803,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                if (value.toInt() >= 0 && value.toInt() < monthlyData.length) {
+                                if (value.toInt() >= 0 &&
+                                    value.toInt() < monthlyData.length) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
@@ -816,7 +822,9 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                         borderData: FlBorderData(show: false),
                         barGroups: monthlyData.entries
                             .map((entry) => BarChartGroupData(
-                                  x: monthlyData.keys.toList().indexOf(entry.key),
+                                  x: monthlyData.keys
+                                      .toList()
+                                      .indexOf(entry.key),
                                   barRods: [
                                     BarChartRodData(
                                       toY: entry.value,
@@ -913,7 +921,12 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                         style: const TextStyle(fontSize: 12),
                       ),
                     ],
-                  ),ween,
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Column(
@@ -951,8 +964,62 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBet
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Premium Tanıtım Kartı
+  Widget _buildPremiumCard(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      color: Theme.of(context).primaryColor.withOpacity(0.1),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.workspace_premium,
+                  color: Theme.of(context).primaryColor,
+                  size: 32,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Premium Özellikleri Keşfedin',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Premium sürüme geçerek detaylı analiz raporları, bütçe planlaması, kategori özelleştirme ve çok daha fazlasına erişin.',
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                widget.onPremiumFeatureRequested?.call('Premium Üyelik');
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              child: const Text('Premium\'a Geç'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

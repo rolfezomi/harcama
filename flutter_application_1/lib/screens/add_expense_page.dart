@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class AddExpensePage extends StatefulWidget {
-  final Function(Transaction) onAddExpense;
+  final Function(Transaction) onAddTransaction;
 
   const AddExpensePage({
     super.key,
-    required this.onAddExpense,
+    required this.onAddTransaction,
   });
 
   @override
@@ -72,7 +72,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     );
 
     // Harcamayı ekleme
-    widget.onAddExpense(newExpense);
+    widget.onAddTransaction(newExpense);
 
     // Sayfadan çıkma
     Navigator.of(context).pop();

@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => AddExpensePage(
-          onAddTransaction: _addTransaction, // Düzeltilmiş
+          onAddTransaction: _addTransaction,
         ),
       ),
     );
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => AddIncomePage(
-          onAddTransaction: _addTransaction, // Düzeltilmiş
+          onAddTransaction: _addTransaction,
         ),
       ),
     );

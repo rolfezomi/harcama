@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class AddIncomePage extends StatefulWidget {
-  final Function(Transaction) onAddIncome;
+  final Function(Transaction) onAddTransaction;
 
   const AddIncomePage({
     super.key,
-    required this.onAddIncome,
+    required this.onAddTransaction,
   });
 
   @override
@@ -71,7 +71,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
     );
 
     // Geliri ekleme
-    widget.onAddIncome(newIncome);
+    widget.onAddTransaction(newIncome);
 
     // Sayfadan çıkma
     Navigator.of(context).pop();
